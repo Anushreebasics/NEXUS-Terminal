@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model TerminalState {
+  id        Int      @id @default(1)
+  totalPnl  Float    @default(0.0)
+  updatedAt DateTime @updatedAt
+}
+
+model ProcessedSignal {
+  id        String   @id
+  type      String
+  asset     String
+  message   String
+  timestamp BigInt
+  data      String
+}

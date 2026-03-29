@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-darkBg: #0b0e14;
+  --color-darkSurface: #151924;
+  --color-darkBorder: #2b3139;
+  --color-neonGreen: #00ff9d;
+  --color-neonRed: #ff3366;
+  --color-neonYellow: #ffcc00;
+  --color-terminalText: #848e9c;
+  --font-terminal: "Inter", "Roboto Mono", monospace;
+}
+
+body {
+  @apply bg-darkBg text-white font-terminal m-0 p-0 antialiased overflow-x-hidden;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shimmer 3s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0e14;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b3139;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #848e9c;
+}
