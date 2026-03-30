@@ -1,55 +1,103 @@
-# Real-Time Multi-Exchange Crypto Arbitrage Terminal
+# 🌌 NEXUS Terminal V5 — Institutional Crypto Analytics
 
-A professional-grade dashboard for detecting cryptocurrency arbitrage opportunities and price anomalies in real-time across multiple exchanges.
+The **NEXUS Terminal** is an institutional-grade, real-time cryptocurrency arbitrage and quantitative analytics platform. It is designed to provide traders with a high-performance, low-latency environment for detecting market inefficiencies across centralized (Binance, Coinbase) and decentralized (Uniswap V3) exchanges.
 
-## Features
-- **Real-Time Data Streaming**: Aggregates live prices using WebSockets for Binance and Coinbase, and `ethers.js` on-chain polling for Uniswap V3.
-- **Arbitrage Detection Engine**: Calculates spreads across exchanges and flags profitable arbitrage opportunities.
-- **Anomaly & Spike Alerts**: Computes rolling global averages and time-series data to detect anomalous price deviations or sudden flash crashes/spikes.
-- **Trading Terminal UI**: A sleek, dark-mode React (Vite) interface built with Tailwind CSS and Recharts.
+![Demo Recording](https://raw.githubusercontent.com/Anushreebasics/NEXUS-Terminal/main/nexus_terminal_v5_full_demo.webp) *(Replace with actual hosted gif/image after push)*
 
 ---
 
-## Folder Structure
-- `/backend`: Node.js Express/WebSocket server and detection logic.
-- `/frontend`: React SPA dashboard powered by Vite, Tailwind CSS, and Recharts.
+## 🚀 Getting Started
 
----
+### Prerequisites
+- **Node.js** (v18.x or higher)
+- **npm** (v9.x or higher)
+- **C++ Build Tools** (Required for `better-sqlite3` and `msgpackr` native optimizations)
 
-## 🚀 Quick Setup Guide
-
-### 1. Start the Backend
+### 1. Installation
+Clone the repository and install dependencies for both the frontend and backend.
 
 ```bash
+# Clone the repository
+git clone https://github.com/Anushreebasics/NEXUS-Terminal.git
+cd NEXUS-Terminal
+
+# Install Backend dependencies
 cd backend
 npm install
-npm run dev
-```
 
-The server will start on `http://localhost:3001` and expose a WebSocket connection at `ws://localhost:3001`.
-
-### 2. Start the Frontend
-
-```bash
-cd frontend
+# Install Frontend dependencies
+cd ../frontend
 npm install
-npm run dev
 ```
 
-The frontend will typically start on `http://localhost:5173`. Open this URL in your browser to see the live terminal.
-
----
-
-## Configuration
-
-The backend uses a public Ankr/Cloudflare Ethereum RPC endpoint for Uniswap connection by default. If you encounter rate limits or connection errors, you can create a `.env` file in the `/backend` directory:
+### 2. Configuration (`backend/.env`)
+Create a `.env` file in the `backend/` directory to configure your environment.
 
 ```env
 PORT=3001
-RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_KEY
+# Use a stable RPC for Uniswap V3 (LlamaRPC or Alchemy recommended)
+RPC_URL="https://eth.llamarpc.com"
+DATABASE_URL="file:./dev.db"
 ```
 
-## Note on Decentralized Data
+### 3. Launching the Terminal
+You need to run both the backend and frontend simultaneously.
 
-- The detection engine tracks BTC, ETH, and SOL.
-- Since SOL is not natively traded on Ethereum Mainnet Uniswap, the Uniswap mock either ignores SOL or relies on Wrapped variants (if provided). The system seamlessly handles incomplete data matrices without breaking the UI.
+**In Terminal 1 (Backend):**
+```bash
+cd backend
+npm run dev
+```
+
+**In Terminal 2 (Frontend):**
+```bash
+cd frontend
+npm run dev
+```
+
+Open **[http://localhost:5173](http://localhost:5173)** in your browser.
+
+---
+
+## 🛠️ Key Features & How to Use Them
+
+### 1. Live Market Matrix (Arbitrage Detection)
+The matrix aggregates prices from Binance, Coinbase, and Uniswap.
+- **How to use**: Watch the `SPREAD` column. When a spread exceeds your configured threshold (default 0.5%), a real-time alert is triggered in the **Detection Engine Alerts** feed.
+- **Paper Trading**: The system automatically simulates a $10,000 spot trade for every viable arbitrage detected, calculating fees and updating your **Virtual PnL** in the header.
+
+### 2. Level 2 Order Book (Market Depth)
+Located in the center of the dashboard, this streams live bids and asks directly from **Coinbase**.
+- **Visual Heatmap**: The blue and red bars represent relative volume at each price level.
+- **Live Spread**: The center display shows the current bid-ask spread in real-time.
+
+### 3. NLP Sentiment Engine (Fear & Greed)
+The top-left gauge analyzes the latest crypto headlines from global RSS feeds.
+- **Real-time Scoring**: Headlines are processed via a financial lexicon to produce a score from -100 (Extreme Fear) to +100 (Extreme Greed).
+- **Transparency**: Hover or look below the gauge to see the *actual headline* that triggered the most recent sentiment shift.
+
+### 4. Interactive Settings Panel
+Click the **Gear Icon** (top right) to open the configuration menu.
+- **Dynamic Thresholds**: Adjust Arbitrage, Anomaly, and Spike detection sensitivity on the fly.
+- **No Restart Required**: Changes are pushed to the backend over a REST API and applied instantly to the live data stream.
+
+### 5. Persistent State
+Thanks to the **SQLite + WAL** architecture, your **Virtual PnL** and recent signals survive server restarts. You can close the terminal and return later without losing your session history.
+
+---
+
+## 🧬 Technical Architecture
+
+- **Binary Protocol**: Uses **MessagePack** (`msgpackr`) for WebSocket communication, slashing payload sizes by ~80% compared to standard JSON.
+- **High-Concurrency DB**: Powered by `better-sqlite3` in Write-Ahead Logging (WAL) mode for synchronous, high-speed persistence.
+- **On-Chain Polling**: Custom `ethers.js` adapter for Uniswap V3 `slot0` contract calls with a demo-fallback mechanism for RPC resilience.
+- **Quant Logic**: Implements a rolling Z-Score algorithm (100-tick window) for statistical anomaly detection.
+
+---
+
+## 📜 License
+ISC License - Feel free to use this for your own trading research or as a portfolio piece.
+
+---
+
+*Built by [Anushreebondia](https://github.com/Anushreebasics) — Institutional Crypto Engineering.*
