@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { pack, unpack } from 'msgpackr';
 
 import { priceStore } from './src/services/PriceStore';
@@ -15,8 +17,6 @@ import { sentimentEngine } from './src/services/SentimentEngine';
 import './src/exchanges/Binance';
 import './src/exchanges/Coinbase';
 import './src/exchanges/Uniswap';
-
-dotenv.config();
 
 const app = express();
 app.use(cors());
